@@ -28,7 +28,7 @@ $(function() {
 			featureType: "all",
 			elementType: "labels",
 			stylers: [{
-				visibility: "off"
+				visibility: "on"
 			}]
 		},
 
@@ -37,7 +37,7 @@ $(function() {
 			featureType: "road",
 			elementType: "geometry",
 			stylers: [{
-				visibility: "off"
+				visibility: "on"
 			}]
 		}
 
@@ -47,15 +47,15 @@ $(function() {
 	// https://developers.google.com/maps/documentation/javascript/reference#MapOptions
 	var options = {
 		center: {
-			lat: 42.3770,
-			lng: -71.1256
-		}, // Cambridge, Massachusetts
+			lat: -24.2002,
+			lng: 134.3525
+		}, // Australia
 		disableDefaultUI: true,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
-		maxZoom: 14,
+		maxZoom: 20,
 		panControl: true,
 		styles: styles,
-		zoom: 13,
+		zoom: 4,
 		zoomControl: true
 	};
 
