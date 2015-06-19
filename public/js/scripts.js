@@ -167,7 +167,7 @@ function configure() {
 		source: search,
 		templates: {
 			empty: "no places found yet",
-			suggestion: _.template("<p><%- place_name %>, <%- admin_name1 %>, <%- postal_code %></p>")
+			suggestion: _.template("<p><%- Suburb %>, <%- STATE_NAME_2011  %>, <%- POA_CODE_2011 %></p>")
 		}
 	});
 

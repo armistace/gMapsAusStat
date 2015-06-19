@@ -10,7 +10,7 @@
      */
 
     // your database's name
-    define("DATABASE", "pset8");
+    define("DATABASE", "AusPlaces");
 
     // your database's password
     define("PASSWORD", "Iwrt1dip2012");
