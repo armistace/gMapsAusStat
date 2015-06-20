@@ -26,6 +26,15 @@ body,
 	padding: 0;
 }
 /* align form to right of pan control */
+.disclaim{
+    position: absolute;
+    top: 60px;
+    left: 0px;
+    font-size: small;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
 
 #form {
 	/* distance from left edge of viewport */
@@ -104,4 +113,16 @@ body,
 	text-align: left;
 	white-space: nowrap;
 	overflow: auto;
+}
+#drawCanvas { 
+    position: absolute; 
+    top: 200px; 
+    left: 100px; 
+    /*z-index: 199;*/
+    background-color: #ffffff;
+    width: 400px;
+    margin: 0;
+    border-radius: 15px;
+    border: 1px solid #ccc;         
+    padding: 20px; 
 }
