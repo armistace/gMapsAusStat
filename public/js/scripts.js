@@ -55,7 +55,7 @@ $(function() {
 		maxZoom: 20,
 		panControl: true,
 		styles: styles,
-		zoom: 4,
+		zoom: 7,
 		zoomControl: true
 	};
 
@@ -167,7 +167,7 @@ function configure() {
 		source: search,
 		templates: {
 			empty: "no places found yet",
-			suggestion: _.template("<p><%- Suburb %>, <%- STATE_NAME_2011  %>, <%- POA_CODE_2011 %></p>")
+			suggestion: _.template("<p><%- Suburb %>, <%- State  %>, <%- POA_CODE_2011 %></p>")
 		}
 	});
 
@@ -282,7 +282,6 @@ function update() {
 	var bounds = map.getBounds();
 	var ne = bounds.getNorthEast();
 	var sw = bounds.getSouthWest();
-
 	// get places within bounds (asynchronously)
 	var parameters = {
 		ne: ne.lat() + "," + ne.lng(),

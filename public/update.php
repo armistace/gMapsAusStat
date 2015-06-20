@@ -5,6 +5,7 @@
     // ensure proper usage
     if (!isset($_GET["sw"], $_GET["ne"]))
     {
+        echo "sw is not set";
         http_response_code(400);
         exit;
     }
@@ -13,6 +14,8 @@
     if (!preg_match("/^-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?$/", $_GET["sw"]) ||
         !preg_match("/^-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?$/", $_GET["ne"]))
     {
+        echo "not in lat long format";
+        echo $_GET["sw"];
         http_response_code(400);
         exit;
     }
@@ -23,16 +26,23 @@
     // explode northeast corner into two variables
     list($ne_lat, $ne_lng) = explode(",", $_GET["ne"]);
 
+    echo $sw_lat;
+    echo "<br>";
+    echo $sw_lng;
+    echo "<br>";
+    echo $ne_lat;
+    echo "<br>";
+    echo $ne_lng;
     // find 10 cities within view, pseudorandomly chosen if more within view
     if ($sw_lng <= $ne_lng)
     {
         // doesn't cross the antimeridian
-        $rows = query("SELECT * FROM places WHERE ? <= latitude AND latitude <= ? AND (? <= longitude AND longitude <= ?) GROUP BY country_code, place_name, admin_code1 ORDER BY RAND() LIMIT 10", $sw_lat, $ne_lat, $sw_lng, $ne_lng);
+        $rows = query("SELECT * FROM PostcodeCoords WHERE ? <= latitude AND latitude <= ? AND (? <= longitude AND longitude <= ?) GROUP BY State, Suburb, POA_CODE_2011 ORDER BY RAND() LIMIT 10", $sw_lat, $ne_lat, $sw_lng, $ne_lng);
     }
     else
     {
         // crosses the antimeridian
-        $rows = query("SELECT * FROM places WHERE ? <= latitude AND latitude <= ? AND (? <= longitude OR longitude <= ?) GROUP_BY country_code, place_name, admin_code1 ORDER BY RAND() LIMIT 10", $sw_lat, $ne_lat, $sw_lng, $ne_lng);
+        $rows = query("SELECT * FROM PostcodeCoords WHERE ? <= latitude AND latitude <= ? AND (? <= longitude OR longitude <= ?) GROUP_BY State, Suburb, POA_CODE_2011 ORDER BY RAND() LIMIT 10", $sw_lat, $ne_lat, $sw_lng, $ne_lng);
     }
 
     // output places as JSON (pretty-printed for debugging convenience)

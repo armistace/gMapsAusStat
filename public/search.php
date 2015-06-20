@@ -16,7 +16,7 @@
 		$search=str_replace(",", "%' OR '%", $search);
 		
 		
-        $queryString1="Select DISTINCT PostcodeCoords.Suburb, GeoLocation.STATE_NAME_2011, GeoLocation.POA_CODE_2011 FROM PostcodeCoords, GeoLocation WHERE PostcodeCoords.POA_CODE_2011 = GeoLocation.POA_CODE_2011 AND PostcodeCoords.Suburb LIKE '$search%' LIMIT 10";
+        $queryString1="Select * FROM PostcodeCoords WHERE PostcodeCoords.Suburb LIKE '$search%' LIMIT 10";
         
        // $queryString2="Select DISTINCT PostcodeCoords.Suburb, GeoLocation.STATE_NAME_2011, GeoLocation.POA_CODE_2011 FROM PostcodeCoords, GeoLocation WHERE PostcodeCoords.POA_CODE_2011 = GeoLocation.POA_CODE_2011 AND GeoLocation.STATE_NAME_2011 like '$search%' LIMIT 10";
 
