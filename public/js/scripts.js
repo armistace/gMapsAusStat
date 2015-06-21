@@ -55,7 +55,7 @@ $(function() {
 		maxZoom: 20,
 		panControl: true,
 		styles: styles,
-		zoom: 7,
+		zoom: 4,
 		zoomControl: true
 	};
 
@@ -76,7 +76,7 @@ $(function() {
 function addMarker(place) {
 	//Parameters for the articles query
 	var parameters = {
-		geo: place.place_name,
+		geo: place.Suburb,
 	};
 
 
@@ -181,8 +181,10 @@ function configure() {
 		// set map's center
 		map.setCenter({
 			lat: latitude,
-			lng: longitude
+			lng: longitude,
 		});
+
+        map.setZoom(12);
 
 		// update UI
 		update();
@@ -294,8 +296,9 @@ function update() {
 			// remove old markers from map
 			removeMarkers();
 
+            console.log(data);
 			// add new markers to map
-			for (var i = 0; i < data.length; i++) {
+			for (var i = 0; i < 10; i++) {
 				addMarker(data[i]);
 			}
 		})

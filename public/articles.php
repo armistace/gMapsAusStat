@@ -5,6 +5,7 @@
     // ensure proper usage
     if (empty($_GET["geo"]))
     {
+        echo "I ain't got no geo";
         http_response_code(400);
         exit;
     }

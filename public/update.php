@@ -26,13 +26,6 @@
     // explode northeast corner into two variables
     list($ne_lat, $ne_lng) = explode(",", $_GET["ne"]);
 
-    echo $sw_lat;
-    echo "<br>";
-    echo $sw_lng;
-    echo "<br>";
-    echo $ne_lat;
-    echo "<br>";
-    echo $ne_lng;
     // find 10 cities within view, pseudorandomly chosen if more within view
     if ($sw_lng <= $ne_lng)
     {
