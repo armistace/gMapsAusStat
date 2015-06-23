@@ -86,13 +86,25 @@ function addMarker(place) {
 		map: map,
 	});
 	markers.push(marker1);
-
+    
+    //debugging purposes
 	console.log(markers);
 
 	//add the maker!
 	//google.maps.event.addDOMListener(window, 'load', addMarker);
 
 }
+
+function getData(place) {
+    var parameter = {
+        postcode: place.POA_CODE_2011
+    }
+
+    $.getJSON("ABSgeo.php",parameters).always(function, data jqXHR) {
+    }
+
+}
+
 
 
 /**
@@ -145,6 +157,7 @@ function configure() {
 
 		// update UI
 		update();
+        getData(suggestion);
 	});
 
 	// hide info window when text box has focus
@@ -257,7 +270,8 @@ function update() {
 			// add new markers to map
 			for (var i = 0; i < 10; i++) {
 				addMarker(data[i]);
-			}
+			} 
+
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
 
