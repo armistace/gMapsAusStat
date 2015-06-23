@@ -97,11 +97,20 @@ function addMarker(place) {
 
 function getData(place) {
     var parameter = {
-        postcode: place.POA_CODE_2011
+        postcode: place.POA_CODE_2011,
     }
 
-    $.getJSON("ABSgeo.php",parameters).always(function, data jqXHR) {
-    }
+    $.getJSON("ABSgeo.php",parameter).always(function (data, textStatus, jqXHR) {
+
+        var htmlContent = "<p>";
+        for (var i = 0; i < data.length; i++) {
+            htmlContent += data[i].SA2_NAME_2011;
+            htmlContent += "<br>";
+        }
+        htmlContent += "</p>";
+        document.getElementById('drawCanvas').innerHTML = htmlContent;
+    });
+
 
 }
 
@@ -157,6 +166,7 @@ function configure() {
 
 		// update UI
 		update();
+        console.log(suggestion);
         getData(suggestion);
 	});
 
