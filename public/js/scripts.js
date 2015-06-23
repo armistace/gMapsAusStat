@@ -23,7 +23,7 @@ $(function() {
 	// https://developers.google.com/maps/documentation/javascript/styling
 	var styles = [
 
-		// hide Google's labels
+		// show Google's labels
 		{
 			featureType: "all",
 			elementType: "labels",
@@ -32,7 +32,7 @@ $(function() {
 			}]
 		},
 
-		// hide roads
+		// show roads
 		{
 			featureType: "road",
 			elementType: "geometry",
@@ -74,66 +74,23 @@ $(function() {
  * Adds marker for place to map.
  */
 function addMarker(place) {
-	//Parameters for the articles query
-	var parameters = {
-		geo: place.Suburb,
-	};
-
 
 	//prepare the coordinate
 	var latLng = new google.maps.LatLng(place.latitude, place.longitude);
 
-	//place the markers on that map based on the above coordinates
-	var marker1 = new MarkerWithLabel({
+	//prepare the marker
+	var marker1 = new google.maps.Marker({
 		position: latLng,
 		draggable: false,
 		raiseOnDrag: true,
 		map: map,
-		labelContent: "What's the news?",
-		labelAnchor: new google.maps.Point(40, 0),
-		labelClass: "labels", // the CSS class for the label
-		labelStyle: {
-			opacity: 0.75
-		}
 	});
+	markers.push(marker1);
 
-	var contentString = "<div id='info'>";
-	//query articles and create the label
-	$.getJSON("articles.php", parameters).always(function(data, textStatus, jqXHR) {
+	console.log(markers);
 
-
-		for (var i = 0; i < 10; i++) {
-			//this builds the links to the different articles, it took a long time to work out
-
-			if (typeof(data[i]) === "undefined") {
-				// http://www.ajaxload.info/
-				contentString = contentString.concat("<img alt='loading' src='img/ajax-loader.gif'/>");
-				break;
-			} else {
-				contentString = contentString.concat("<a href=" + data[i].link + ">" + data[i].title + "</a><br>");
-			}
-
-			// end div
-			//contentString = contentString.concat("<a href=" + data[i].link + ">" + data[i].title + "</a><br>");
-		}
-		contentString += "</div>";
-		//debugging purposes
-
-		/*
-		showInfo(this, contentString);
-		*/
-		var iw1 = new google.maps.InfoWindow({
-			content: contentString
-		});
-		google.maps.event.addListener(marker1, "click", function(e) {
-			iw1.open(map, this);
-		});
-		markers.push(marker1);
-
-
-
-	});
-
+	//add the maker!
+	//google.maps.event.addDOMListener(window, 'load', addMarker);
 
 }
 
@@ -184,7 +141,7 @@ function configure() {
 			lng: longitude,
 		});
 
-        map.setZoom(12);
+		map.setZoom(12);
 
 		// update UI
 		update();
@@ -296,7 +253,7 @@ function update() {
 			// remove old markers from map
 			removeMarkers();
 
-            console.log(data);
+
 			// add new markers to map
 			for (var i = 0; i < 10; i++) {
 				addMarker(data[i]);
