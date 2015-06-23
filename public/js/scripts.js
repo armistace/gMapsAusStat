@@ -7,6 +7,12 @@
  * Global JavaScript.
  */
 
+//population value
+var SA2Name;
+
+//html string
+var htmlContent;
+
 // Google Map
 var map;
 
@@ -100,17 +106,30 @@ function getData(place) {
         postcode: place.POA_CODE_2011,
     }
 
+    htmlContent = "<table style= 'width:100%'>";
+    $.ajaxSetup({'async':false});
     $.getJSON("ABSgeo.php",parameter).always(function (data, textStatus, jqXHR) {
-
-        var htmlContent = "<p>";
         for (var i = 0; i < data.length; i++) {
-            htmlContent += data[i].SA2_NAME_2011;
-            htmlContent += "<br>";
+            
+            var ABSpopURL = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=ABS_CENSUS2011_B04&and=FREQUENCY.A,AGE.TT,MEASURE.3,REGION.";
+            ABSpopURL += data[i].SA2_MAINCODE_2011;
+            SA2Name = data[i].SA2_NAME_2011;
+            ABSpopURL += "&format=json";
+            $.getJSON(ABSpopURL).always(function (popStats, textStatus, jqXHR) {
+                htmlContent += "<tr>";
+                htmlContent += "<td>";
+                htmlContent += SA2Name;
+                htmlContent += "</td>";
+                htmlContent += "<td>";
+                htmlContent += popStats.series[0].observations[0].Value;
+                htmlContent += "</td>";
+                htmlContent += "</tr>";
+            });
         }
-        htmlContent += "</p>";
+        htmlContent += "</table>";
         document.getElementById('drawCanvas').innerHTML = htmlContent;
     });
-
+    
 
 }
 
