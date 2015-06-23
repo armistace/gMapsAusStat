@@ -129,6 +129,7 @@ function getData(place) {
         htmlContent += "</table>";
         document.getElementById('drawCanvas').innerHTML = htmlContent;
     });
+    $.ajaxSetup({'async':true});
     
 
 }
@@ -185,7 +186,6 @@ function configure() {
 
 		// update UI
 		update();
-        console.log(suggestion);
         getData(suggestion);
 	});
 
@@ -294,7 +294,6 @@ function update() {
 
 			// remove old markers from map
 			removeMarkers();
-
 
 			// add new markers to map
 			for (var i = 0; i < 10; i++) {
