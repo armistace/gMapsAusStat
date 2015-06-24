@@ -14,7 +14,7 @@
         }
         
         //PDO is used so this is ok
-        $sql = "SELECT DISTINCT SA2_MAINCODE_2011, SA2_NAME_2011 FROM SA1_Postcode WHERE POA_CODE_2011 = $postcode"; 
+        $sql = "SELECT DISTINCT SA3_CODE_2011, SA3_NAME_2011, SA2_MAINCODE_2011, SA2_NAME_2011 FROM SA1_Postcode WHERE POA_CODE_2011 = $postcode"; 
 
         $geographic = query($sql);
 

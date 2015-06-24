@@ -7,8 +7,11 @@
  * Global JavaScript.
  */
 
-//population value
+//SA names and values
 var SA2Name;
+var SA3Name;
+var SA2popValue;
+var SA3popValue;
 
 //html string
 var htmlContent;
@@ -93,38 +96,59 @@ function addMarker(place) {
 	});
 	markers.push(marker1);
     
-    //debugging purposes
-	console.log(markers);
-
-	//add the maker!
-	//google.maps.event.addDOMListener(window, 'load', addMarker);
-
 }
 
 function getData(place) {
+
+    //Send the postcode data to the database
     var parameter = {
         postcode: place.POA_CODE_2011,
     }
-
+    
+    //prepare the drawCanvas content
     htmlContent = "<table style= 'width:100%'>";
+    htmlContent += "<tr><td><b>SA3</b></td><td><b>SA3 Population</b></td>\
+        <td><b>SA2</b></td><td><b>SA2 Population</b></td></tr>";
+
+    //this is deprecated I will need to work out a better way - it also makes things stutter
     $.ajaxSetup({'async':false});
+
+    //go to Geo to get the SA information
     $.getJSON("ABSgeo.php",parameter).always(function (data, textStatus, jqXHR) {
         for (var i = 0; i < data.length; i++) {
             
-            var ABSpopURL = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=ABS_CENSUS2011_B04&and=FREQUENCY.A,AGE.TT,MEASURE.3,REGION.";
-            ABSpopURL += data[i].SA2_MAINCODE_2011;
+            var SA2URL = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=ABS_CENSUS2011_B04&and=FREQUENCY.A,AGE.TT,MEASURE.3,REGION.";
+            SA2URL += data[i].SA2_MAINCODE_2011;
             SA2Name = data[i].SA2_NAME_2011;
-            ABSpopURL += "&format=json";
-            $.getJSON(ABSpopURL).always(function (popStats, textStatus, jqXHR) {
-                htmlContent += "<tr>";
-                htmlContent += "<td>";
-                htmlContent += SA2Name;
-                htmlContent += "</td>";
-                htmlContent += "<td>";
-                htmlContent += popStats.series[0].observations[0].Value;
-                htmlContent += "</td>";
-                htmlContent += "</tr>";
+            SA2URL += "&format=json";
+            var SA3URL = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=ABS_CENSUS2011_B04&and=FREQUENCY.A,AGE.TT,MEASURE.3,REGION.";
+            SA3URL += data[i].SA3_CODE_2011;
+            SA3Name = data[i].SA3_NAME_2011;
+            SA3URL += "&format=json";
+            $.getJSON(SA3URL).always(function (SA3, textStatus, jqXHR) {
+                SA3popValue = SA3.series[0].observations[0].Value;
+            
+                $.getJSON(SA2URL).always(function (SA2, textStatus, jqXHR) {
+                    SA2popValue = SA2.series[0].observations[0].Value;
+                    htmlContent += "<tr>";
+                    htmlContent += "<td>";
+                    htmlContent += SA3Name;
+                    htmlContent += "</td>";
+                    htmlContent += "<td>";
+                    htmlContent += SA3popValue;
+                    htmlContent += "</td>";
+                    htmlContent += "<td>";
+                    htmlContent += SA2Name;
+                    htmlContent += "</td>";
+                    htmlContent += "<td>";
+                    htmlContent += SA2popValue;
+                    htmlContent += "</td>";
+                });
             });
+           
+            htmlContent += "</tr>";
+
+
         }
         htmlContent += "</table>";
         document.getElementById('drawCanvas').innerHTML = htmlContent;
