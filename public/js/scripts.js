@@ -95,66 +95,89 @@ function addMarker(place) {
 		map: map,
 	});
 	markers.push(marker1);
-    
+
 }
 
 function getData(place) {
 
-    //Send the postcode data to the database
-    var parameter = {
-        postcode: place.POA_CODE_2011,
-    }
-    
-    //prepare the drawCanvas content
-    htmlContent = "<table style= 'width:100%'>";
-    htmlContent += "<tr><td><b>SA3</b></td><td><b>SA3 Population</b></td>\
+	//Send the postcode data to the database
+	var parameter = {
+		postcode: place.POA_CODE_2011,
+	}
+
+	//prepare the drawCanvas content
+	htmlContent = "<table style= 'width:100%'>";
+	htmlContent += "<tr><td><b>SA3</b></td><td><b>SA3 Population</b></td>\
         <td><b>SA2</b></td><td><b>SA2 Population</b></td></tr>";
 
-    //this is deprecated I will need to work out a better way - it also makes things stutter
-    $.ajaxSetup({'async':false});
+	//this is deprecated I will need to work out a better way - it also makes things stutter
+	$.ajaxSetup({
+		'async': false
+	});
 
-    //go to Geo to get the SA information
-    $.getJSON("ABSgeo.php",parameter).always(function (data, textStatus, jqXHR) {
-        for (var i = 0; i < data.length; i++) {
-            
-            var SA2URL = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=ABS_CENSUS2011_B04&and=FREQUENCY.A,AGE.TT,MEASURE.3,REGION.";
-            SA2URL += data[i].SA2_MAINCODE_2011;
-            SA2Name = data[i].SA2_NAME_2011;
-            SA2URL += "&format=json";
-            var SA3URL = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=ABS_CENSUS2011_B04&and=FREQUENCY.A,AGE.TT,MEASURE.3,REGION.";
-            SA3URL += data[i].SA3_CODE_2011;
-            SA3Name = data[i].SA3_NAME_2011;
-            SA3URL += "&format=json";
-            $.getJSON(SA3URL).always(function (SA3, textStatus, jqXHR) {
-                SA3popValue = SA3.series[0].observations[0].Value;
-            
-                $.getJSON(SA2URL).always(function (SA2, textStatus, jqXHR) {
-                    SA2popValue = SA2.series[0].observations[0].Value;
-                    htmlContent += "<tr>";
-                    htmlContent += "<td>";
-                    htmlContent += SA3Name;
-                    htmlContent += "</td>";
-                    htmlContent += "<td>";
-                    htmlContent += SA3popValue;
-                    htmlContent += "</td>";
-                    htmlContent += "<td>";
-                    htmlContent += SA2Name;
-                    htmlContent += "</td>";
-                    htmlContent += "<td>";
-                    htmlContent += SA2popValue;
-                    htmlContent += "</td>";
-                });
-            });
-           
-            htmlContent += "</tr>";
+	//go to Geo to get the SA information
+	$.getJSON("ABSgeo.php", parameter).always(function(data, textStatus, jqXHR) {
+		for (var i = 0; i < data.length; i++) {
 
+			//Grab SA2 information
+			var SA2URL = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=ABS_CENSUS2011_B04&and=FREQUENCY.A,AGE.TT,MEASURE.3,REGION.";
+			SA2URL += data[i].SA2_MAINCODE_2011;
+			SA2Name = data[i].SA2_NAME_2011;
+			SA2URL += "&format=json";
 
-        }
-        htmlContent += "</table>";
-        document.getElementById('drawCanvas').innerHTML = htmlContent;
-    });
-    $.ajaxSetup({'async':true});
-    
+			//Grab SA3 Information
+			var SA3URL = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=ABS_CENSUS2011_B04&and=FREQUENCY.A,AGE.TT,MEASURE.3,REGION.";
+			SA3URL += data[i].SA3_CODE_2011;
+			SA3Name = data[i].SA3_NAME_2011;
+			SA3URL += "&format=json";
+
+			//Query for SA3
+			$.getJSON(SA3URL).always(function(SA3, textStatus, jqXHR) {
+				//Set the SA3 value
+				SA3popValue = SA3.series[0].observations[0].Value;
+
+				//Query for SA2
+				$.getJSON(SA2URL).always(function(SA2, textStatus, jqXHR) {
+					//Set the SA2 value
+					SA2popValue = SA2.series[0].observations[0].Value;
+
+					//Build the HTML for the div id=drawCanvas
+					htmlContent += "<tr>";
+					htmlContent += "<td>";
+					htmlContent += SA3Name;
+					htmlContent += "</td>";
+					htmlContent += "<td>";
+					htmlContent += SA3popValue;
+					htmlContent += "</td>";
+					htmlContent += "<td>";
+					htmlContent += SA2Name;
+					htmlContent += "</td>";
+					htmlContent += "<td>";
+					htmlContent += SA2popValue;
+					htmlContent += "</td>";
+					htmlContent += "</tr>";
+
+					//Close SA2 $.getJSON    
+				});
+
+				//Close the SA3 $.getJSON    
+			});
+
+		}
+
+		//Close the HTML Table
+		htmlContent += "</table>";
+
+		//Draw it in the DIV
+		document.getElementById('drawCanvas').innerHTML = htmlContent;
+	});
+
+	//This turns async back on - I need to work out how to use something else to achieve this
+	//It makes things really stuttery
+	$.ajaxSetup({
+		'async': true
+	});
+
 
 }
 
@@ -210,7 +233,7 @@ function configure() {
 
 		// update UI
 		update();
-        getData(suggestion);
+		getData(suggestion);
 	});
 
 	// hide info window when text box has focus
@@ -322,7 +345,7 @@ function update() {
 			// add new markers to map
 			for (var i = 0; i < 10; i++) {
 				addMarker(data[i]);
-			} 
+			}
 
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
