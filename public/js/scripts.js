@@ -120,24 +120,24 @@ function getData(place) {
 		for (var i = 0; i < data.length; i++) {
 
 			//Grab SA2 information
-			var SA2URL = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=ABS_CENSUS2011_B04&and=FREQUENCY.A,AGE.TT,MEASURE.3,REGION.";
-			SA2URL += data[i].SA2_MAINCODE_2011;
+			var SA2parameter = {
+				SA2: data[i].SA2_MAINCODE_2011,
+			}
 			SA2Name = data[i].SA2_NAME_2011;
-			SA2URL += "&format=json";
 
 			//Grab SA3 Information
-			var SA3URL = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=ABS_CENSUS2011_B04&and=FREQUENCY.A,AGE.TT,MEASURE.3,REGION.";
-			SA3URL += data[i].SA3_CODE_2011;
+			var SA3parameter = {
+				SA3: data[i].SA3_CODE_2011,
+			}
 			SA3Name = data[i].SA3_NAME_2011;
-			SA3URL += "&format=json";
 
 			//Query for SA3
-			$.getJSON(SA3URL).always(function(SA3, textStatus, jqXHR) {
+			$.getJSON("ABSdata.php", SA3parameter).always(function(SA3, textStatus, jqXHR) {
 				//Set the SA3 value
 				SA3popValue = SA3.series[0].observations[0].Value;
 
 				//Query for SA2
-				$.getJSON(SA2URL).always(function(SA2, textStatus, jqXHR) {
+				$.getJSON("ABSdata.php", SA2parameter).always(function(SA2, textStatus, jqXHR) {
 					//Set the SA2 value
 					SA2popValue = SA2.series[0].observations[0].Value;
 
