@@ -107,8 +107,8 @@ function getData(place) {
 
 	//prepare the drawCanvas content
 	htmlContent = "<table style= 'width:100%'>";
-	htmlContent += "<tr><td><b>SA3</b></td><td><b>SA3 Population</b></td>\
-        <td><b>SA2</b></td><td><b>SA2 Population</b></td></tr>";
+	htmlContent += "<tr><td><b>SA3</b></td><td><b>SA3 ERP</b></td>\
+        <td><b>SA2</b></td><td><b>SA2 ERP</b></td></tr>";
 
 	//this is deprecated I will need to work out a better way - it also makes things stutter
 	$.ajaxSetup({
