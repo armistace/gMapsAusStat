@@ -24,6 +24,9 @@ class ABS{
     //this is the url that will be built by BuildURL() 
     public $url;
 
+    //this is the public variable that we load the json into
+    public $json;
+
     /**
      * getDataURL()
      * this will build the url to retreieve data from GetGenericData based on the values provided
@@ -68,6 +71,37 @@ class ABS{
 
         //add the requested format this defaults to JSON
         $this->url .= "&format=" . $this->format;
+    }
+
+    /**
+     * loadJSON()
+     * this loads the json from the URL build in getDataURL()
+     */
+    function loadJSON(){
+        if (isset($this->url)
+        {
+            $this->json = file_get_contents($this->url);
+        }
+        else
+        {
+            echo "URL not set";
+        }
+    }
+
+    /**
+     * serveJSON()
+     * This function serves the JSON to an output file - defualt would be a web page
+     */
+    function serveJSON(){
+        if (isset($this->json)
+        {
+            header("Content-type: application/json");
+            print($this->json);
+        }
+        else
+        {
+            echo "no json is loaded";
+        }
     }
 
 
