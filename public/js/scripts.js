@@ -132,12 +132,12 @@ function getData(place) {
 			SA3Name = data[i].SA3_NAME_2011;
 
 			//Query for SA3
-			$.getJSON("ABSdata.php", SA3parameter).always(function(SA3, textStatus, jqXHR) {
+			$.getJSON("ABSerp.php", SA3parameter).always(function(SA3, textStatus, jqXHR) {
 				//Set the SA3 value
 				SA3popValue = SA3.series[0].observations[0].Value;
 
 				//Query for SA2
-				$.getJSON("ABSdata.php", SA2parameter).always(function(SA2, textStatus, jqXHR) {
+				$.getJSON("ABSerp.php", SA2parameter).always(function(SA2, textStatus, jqXHR) {
 					//Set the SA2 value
 					SA2popValue = SA2.series[0].observations[0].Value;
 

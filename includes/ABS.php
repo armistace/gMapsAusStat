@@ -38,7 +38,7 @@ class ABS{
         $this->url = "http://stat.abs.gov.au/itt/query.jsp?method=GetGenericData&datasetid=" . $this->dataSetId . "&and=";
 
         //loop through the concepts and concepts codes that were provided
-        if(is_array($this->concepts) && is_array($this->conceptCodes) && count($this->concepts) == count($this->conceptCodes)
+        if(is_array($this->concepts) && is_array($this->conceptCodes) && count($this->concepts) == count($this->conceptCodes))
         {
             //This allows me to loop through multiple array in a for each - I don't know yet if my thinking will work
             $i = 0;
@@ -53,7 +53,7 @@ class ABS{
                 $i++;
 
                 //check if we are at the end of the string as we do not want a comma on the last one
-                if ($i < count($this->concepts)
+                if ($i < count($this->concepts))
                 {
                     $this->url .= ",";
                 }
@@ -78,7 +78,7 @@ class ABS{
      * this loads the json from the URL build in getDataURL()
      */
     function loadJSON(){
-        if (isset($this->url)
+        if (isset($this->url))
         {
             $this->json = file_get_contents($this->url);
         }
@@ -93,7 +93,7 @@ class ABS{
      * This function serves the JSON to an output file - defualt would be a web page
      */
     function serveJSON(){
-        if (isset($this->json)
+        if (isset($this->json))
         {
             header("Content-type: application/json");
             print($this->json);
@@ -102,6 +102,42 @@ class ABS{
         {
             echo "no json is loaded";
         }
+    }
+
+    /*
+     * defaultConcepts()
+     * Because building the function array each time is boring
+     * and can be handled automagically.
+     * Careful though it is suggested that you build a test script 
+     * to ensure that the order you provide $conceptCodes is correct otherwise
+     * this will fail
+     */
+
+    function defaultConcepts(){
+        //build the url to query the ABS api with based on the requested $dataSetId
+        $conceptURL = "http://stat.abs.gov.au/itt/query.jsp?method=GetDatasetConcepts&datasetid=" . $this->dataSetId;
+
+        //grab the data
+        $conceptData = file_get_contents($conceptURL);
+
+        //decode it to prepare to build the array
+        $conceptJSON = json_decode($conceptData, TRUE);
+        
+        //discard the information we don't care about
+        $conceptsSelect = $conceptJSON["concepts"];
+
+        //set the array
+        $conceptBuilder = array();
+
+        //build the array
+        foreach($conceptsSelect as $concept)
+        {
+            array_push($conceptBuilder, $concept);
+        }
+
+        //set $concepts
+        $this->concepts = $conceptBuilder;
+
     }
 
 

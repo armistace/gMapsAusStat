@@ -7,21 +7,23 @@
 
     //prepare ABS class with universal variables for ERP
     $data->dataSetId = "ABS_ANNUAL_ERP_ASGS";
-    $data->concepts=array("FREQUENCY","MEASURE","ASGS_2011","REGIONTYPE");
 
-
+    //grab the concepts
+    $data->defaultConcepts();// = ("FREQUENCY", "REGIONTYPE", "MEASURE","ASGS_2011",);
+    
+    
     //SA2?
     if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["SA2"]))
     {
         //SA2 unique variables
-        $data->conceptCodes=array("A","ERP",$_GET["SA2"],"SA2");
+        $data->conceptCodes=array("A","SA2", "ERP",$_GET["SA2"]);
     }
 
     //SA3?
 	else if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["SA3"]))
     {
         //sa3 unique variables
-        $data->conceptCodes=array("A","ERP",$_GET["SA3"],"SA3");
+        $data->conceptCodes=array("A","SA3", "ERP", $_GET["SA3"]);
     }
     
     //Build the URL
