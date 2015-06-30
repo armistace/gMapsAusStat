@@ -1,47 +1,35 @@
 <?php
     require(__DIR__ . "/../includes/config.php");
+    
+    
+    //set class
+    $data = new ABS;
 
-	if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["SA2"]))
+    //prepare ABS class with universal variables for ERP
+    $data->dataSetId = "ABS_ANNUAL_ERP_ASGS";
+    $data->concepts=array("FREQUENCY","MEASURE","ASGS_2011","REGIONTYPE");
+
+
+    //SA2?
+    if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["SA2"]))
     {
-        //use ABS class to set values
-        $data= new ABS;
-        $data->dataSetId = "ABS_ANNUAL_ERP_ASGS";
-        $data->concepts=array("FREQUENCY","MEASURE","ASGS_2011","REGIONTYPE");
+        //SA2 unique variables
         $data->conceptCodes=array("A","ERP",$_GET["SA2"],"SA2");
+    }
 
-        //Build the URL
-        $data->getDataURL();
-
-        //grab the JSON
-        $data->loadJSON();
-
-        //serve the JSON
-        $data->serveJSON();
-		
-	}
+    //SA3?
 	else if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["SA3"]))
     {
-        //use ABS class to set values
-        $data= new ABS;
-        $data->dataSetId = "ABS_ANNUAL_ERP_ASGS";
-        $data->concepts=array("FREQUENCY","MEASURE","ASGS_2011","REGIONTYPE");
+        //sa3 unique variables
         $data->conceptCodes=array("A","ERP",$_GET["SA3"],"SA3");
-
-        //Build the URL
-        $data->getDataURL();
-
-        //grab the JSON
-        $data->loadJSON();
-
-        //serve the JSON
-        $data->serveJSON();
     }
     
-    
-	else
-    {
-        print "<form action='ABSdata.php'>";
-        print "<input type='text' name=SA2>";
-        print "<input type='text' name = SA3>";
-        print "</form>";
-    }
+    //Build the URL
+    $data->getDataURL();
+
+    //grab the JSON
+    $data->loadJSON();
+
+    //serve the JSON
+    $data->serveJSON();
+
