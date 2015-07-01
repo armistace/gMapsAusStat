@@ -12,6 +12,8 @@ var SA2Name;
 var SA3Name;
 var SA2popValue;
 var SA3popValue;
+var state;
+var lpi;
 
 //html string
 var htmlContent;
@@ -107,8 +109,7 @@ function getData(place) {
 
 	//prepare the drawCanvas content
 	htmlContent = "<table style= 'width:100%'>";
-	htmlContent += "<tr><td><b>SA3</b></td><td><b>SA3 ERP</b></td>\
-        <td><b>SA2</b></td><td><b>SA2 ERP</b></td></tr>";
+	htmlContent += "<tr><td><b>SA3</b></td><td><b>SA3 ERP</b></td><td><b>SA2</b></td><td><b>SA2 ERP</b></td><td><b>State LPI</b></td></tr>";
 
 	//this is deprecated I will need to work out a better way - it also makes things stutter
 	$.ajaxSetup({
@@ -131,6 +132,13 @@ function getData(place) {
 			}
 			SA3Name = data[i].SA3_NAME_2011;
 
+            var stateParameter = {
+                STATE: data[i].STATE_CODE_2011,
+            }
+            state = data[i].STATE_NAME_2011;
+            //Query for LPI
+            $.getJSON("ABSlabour.php", stateParameter).always(function(STATE, textStatus, jqXHR) {
+                lpi = STATE.series[0].observations[0].Value;
 			//Query for SA3
 			$.getJSON("ABSerp.php", SA3parameter).always(function(SA3, textStatus, jqXHR) {
 				//Set the SA3 value
@@ -155,6 +163,9 @@ function getData(place) {
 					htmlContent += "<td>";
 					htmlContent += SA2popValue;
 					htmlContent += "</td>";
+                    htmlContent += "<td>";
+                    htmlContent += lpi;
+                    htmlContent += "</td>";
 					htmlContent += "</tr>";
 
 					//Close SA2 $.getJSON    
@@ -162,6 +173,8 @@ function getData(place) {
 
 				//Close the SA3 $.getJSON    
 			});
+            //Close State $.getJSON
+            });
 
 		}
 
