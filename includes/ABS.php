@@ -15,7 +15,7 @@ class ABS{
 
     //In my case this will either be the latest date, which is default or the whole dataset
     //theoritically it could be any year available in the dataset
-    public $yearValue = "2014";
+    public $yearValue = "none";
 
     //In my case this will almost exclusively be JSON - hence the default
     //but I will build it to accept any of the formats available from the ABS
@@ -66,8 +66,16 @@ class ABS{
             echo "There is an error in the concepts and conceptCode arrays. The GenericData URL can not be built";
         }
 
-        //add the year value to the URL this defualts to the current year        
-        $this->url .= "&&start=" . $this->yearValue;
+        //year value is flagged none by default if nothing assume we want latest
+        //else add the year value
+        if($this->yearValue == "none")
+        {
+            $this->url .= "&&series=latest";
+        }
+        else
+        {
+            $this->url .= "&&start=" . $this->yearValue;
+        }
 
         //add the requested format this defaults to JSON
         $this->url .= "&format=" . $this->format;

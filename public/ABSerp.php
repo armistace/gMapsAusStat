@@ -10,6 +10,8 @@
 
     //grab the concepts
     $data->defaultConcepts();// = ("FREQUENCY", "REGIONTYPE", "MEASURE","ASGS_2011",);
+
+    $data->yearValue="2014";
     
     
     //SA2?

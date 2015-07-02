@@ -2,8 +2,9 @@
     require(__DIR__ . "/../includes/config.php");
     $test = new ABS;
     
-    $test->dataSetId = "ABS_ANNUAL_ERP_ASGS";
+    $test->dataSetId = "LABOUR_PRICE_INDEX";
     $test->defaultConcepts();
+    var_dump($test->concepts);
     //$test->serveJSON();
 ?>
 

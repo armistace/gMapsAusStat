@@ -6,14 +6,13 @@
     $data = new ABS;
     
     //prepare ABS class with universal variables for Labour Price Index
-    $data->dataSetID = "LABOUR_PRICE_INDEX";
+    $data->dataSetId = "LABOUR_PRICE_INDEX";
 
     //grab the concepts
-    $data->defaultConcepts(); //("FREQUENCY", "TSEST", "INDEX", "SECTOR", "MEASURE", "REGION")
-
+    $data->concepts=array("REGION", "SECTOR", "MEASURE");
     if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["STATE"]));
     {
-        $data->conceptCodes=array("Q", "T", "THRPIB", 7, 1, $_GET["STATE"]);
+        $data->conceptCodes=array($_GET["STATE"], "7", "1");
     }
 
     //build the URL
