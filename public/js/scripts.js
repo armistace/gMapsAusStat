@@ -7,17 +7,6 @@
  * Global JavaScript.
  */
 
-//SA names and values
-var SA2Name;
-var SA3Name;
-var SA2popValue;
-var SA3popValue;
-var state;
-var lpi;
-
-//html string
-var htmlContent;
-
 // Google Map
 var map;
 
@@ -107,88 +96,47 @@ function getData(place) {
 		postcode: place.POA_CODE_2011,
 	}
 
-	//prepare the drawCanvas content
-	htmlContent = "<table style= 'width:100%'>";
-	htmlContent += "<tr><td><b>SA3</b></td><td><b>SA3 ERP</b></td><td><b>SA2</b></td><td><b>SA2 ERP</b></td><td><b>State LPI</b></td></tr>";
-
-	//this is deprecated I will need to work out a better way - it also makes things stutter
-	$.ajaxSetup({
-		'async': false
-	});
 
 	//go to Geo to get the SA information
 	$.getJSON("ABSgeo.php", parameter).always(function(data, textStatus, jqXHR) {
 		for (var i = 0; i < data.length; i++) {
 
 			//Grab SA2 information
-			var SA2parameter = {
-				SA2: data[i].SA2_MAINCODE_2011,
-			}
-			SA2Name = data[i].SA2_NAME_2011;
+			var SA2code = data[i].SA2_MAINCODE_2011;
+			var SA2Name = data[i].SA2_NAME_2011;
 
 			//Grab SA3 Information
-			var SA3parameter = {
-				SA3: data[i].SA3_CODE_2011,
-			}
-			SA3Name = data[i].SA3_NAME_2011;
+			var SA3code = data[i].SA3_CODE_2011;
+            var SA3Name = data[i].SA3_NAME_2011;
+            var stateCode = data[i].STATE_CODE_2011;
+            var state = data[i].STATE_NAME_2011;
 
-            var stateParameter = {
-                STATE: data[i].STATE_CODE_2011,
-            }
-            state = data[i].STATE_NAME_2011;
-            //Query for LPI
-            $.getJSON("ABSlabour.php", stateParameter).always(function(STATE, textStatus, jqXHR) {
-                lpi = STATE.series[0].observations[0].Value;
-			//Query for SA3
-			$.getJSON("ABSerp.php", SA3parameter).always(function(SA3, textStatus, jqXHR) {
-				//Set the SA3 value
-				SA3popValue = SA3.series[0].observations[0].Value;
+            var sa2Content = document.createElement('sa2content');
+            var sa3Content = document.createElement('sa3content');
 
-				//Query for SA2
-				$.getJSON("ABSerp.php", SA2parameter).always(function(SA2, textStatus, jqXHR) {
-					//Set the SA2 value
-					SA2popValue = SA2.series[0].observations[0].Value;
-
-					//Build the HTML for the div id=drawCanvas
-					htmlContent += "<tr>";
-					htmlContent += "<td>";
-					htmlContent += SA3Name;
-					htmlContent += "</td>";
-					htmlContent += "<td>";
-					htmlContent += SA3popValue;
-					htmlContent += "</td>";
-					htmlContent += "<td>";
-					htmlContent += SA2Name;
-					htmlContent += "</td>";
-					htmlContent += "<td>";
-					htmlContent += SA2popValue;
-					htmlContent += "</td>";
-                    htmlContent += "<td>";
-                    htmlContent += lpi;
-                    htmlContent += "</td>";
-					htmlContent += "</tr>";
-
-					//Close SA2 $.getJSON    
-				});
-
-				//Close the SA3 $.getJSON    
-			});
-            //Close State $.getJSON
+            sa2Content.className = 'sa2';
+            sa3Content.className = 'sa3';
+            var sa2html;
+            buildERP(SA2code, 2).then(function(sa2HtmlBuild){
+                sa2html = sa2HtmlBuild;
             });
+            var sa3html;
+            buildERP(SA3code, 3).then(function(sa3HtmlBuild){
+                sa3html = sa3HtmlBuild;
+            });
+            
+            console.log(sa2html);
+            console.log(sa3html);
 
-		}
+            sa2Content.innerHTML = sa2html;
+            sa3Content.innerHTML = sa3html;
 
-		//Close the HTML Table
-		htmlContent += "</table>";
+		    //Draw it in the DIV
+            document.getElementById('drawCanvas').innerHTML="";
+		    document.getElementById('drawCanvas').appendChild(sa2Content);
+            document.getElementById('drawCanvas').appendChild(sa3Content);  
+        }
 
-		//Draw it in the DIV
-		document.getElementById('drawCanvas').innerHTML = htmlContent;
-	});
-
-	//This turns async back on - I need to work out how to use something else to achieve this
-	//It makes things really stuttery
-	$.ajaxSetup({
-		'async': true
 	});
 
 
@@ -367,3 +315,44 @@ function update() {
 			console.log(errorThrown.toString());
 		});
 }
+
+function buildERP(SAcode, SAlevel, callback) {
+
+    if (SAlevel === 2) {
+        var parameter = {
+            SA2: SAcode,
+        }
+    }
+    else {
+        var parameter = {
+            SA3: SAcode,
+        }
+    }
+
+    return $.getJSON("ABSerp.php", parameter).then(function(data) {
+        callback(data);
+    });
+                             
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
