@@ -99,7 +99,7 @@ function getData(place) {
 
 	//go to Geo to get the SA information
 	$.getJSON("ABSgeo.php", parameter).always(function(data, textStatus, jqXHR) {
-		for (var i = 0; i < data.length; i++) {
+		for (var i = 0; i < 1; i++) {
 
 			//Grab SA2 information
 			var SA2code = data[i].SA2_MAINCODE_2011;
@@ -111,30 +111,67 @@ function getData(place) {
             var stateCode = data[i].STATE_CODE_2011;
             var state = data[i].STATE_NAME_2011;
 
-            var sa2Content = document.createElement('sa2content');
-            var sa3Content = document.createElement('sa3content');
 
-            sa2Content.className = 'sa2';
-            sa3Content.className = 'sa3';
-            var sa2html;
-            buildERP(SA2code, 2).then(function(sa2HtmlBuild){
-                sa2html = sa2HtmlBuild;
-            });
-            var sa3html;
-            buildERP(SA3code, 3).then(function(sa3HtmlBuild){
-                sa3html = sa3HtmlBuild;
-            });
+
             
-            console.log(sa2html);
-            console.log(sa3html);
-
-            sa2Content.innerHTML = sa2html;
-            sa3Content.innerHTML = sa3html;
-
-		    //Draw it in the DIV
             document.getElementById('drawCanvas').innerHTML="";
-		    document.getElementById('drawCanvas').appendChild(sa2Content);
-            document.getElementById('drawCanvas').appendChild(sa3Content);  
+            $.getJSON("ABSerp.php", {SA2: SA2code}).done(function(data){
+                    
+                var sa2Content = document.createElement('sa2content');
+                var sa2pop;
+	    	    var sa2html = "";
+                
+                sa2Content.className = 'sa2';
+                sa2pop = data.series[0].observations[0].Value;
+
+                console.log(sa2pop);
+	    
+			    sa2html += "<table>";
+                sa2html += "<tr>";
+                sa2html += "<td>";
+                sa2html += "SA2 Population:&nbsp ";
+                sa2html += "</td>";
+           	    sa2html += "<td>";
+                sa2html += parseInt( sa2pop ).toLocaleString();
+                sa2html += "</td>";
+                sa2html += "</tr>";
+                sa2html += "</table>";
+
+                sa2Content.innerHTML = sa2html;
+
+		        document.getElementById('drawCanvas').appendChild(sa2Content);
+            })
+
+
+
+
+            $.getJSON("ABSerp.php", {SA3: SA3code}).done(function(data){
+
+                var sa3pop;
+                var sa3Content = document.createElement('sa3content');
+			    var sa3html = "";
+
+                sa3Content.className = 'sa3';
+                sa3pop = data.series[0].observations[0].Value;
+                console.log(sa3pop);
+
+			    sa3html += "<table>";
+                sa3html += "<tr>";
+                sa3html += "<td>";
+                sa3html += "SA3 Population:&nbsp ";
+                sa3html += "</td>";
+           	    sa3html += "<td>";
+                sa3html += parseInt( sa3pop ).toLocaleString();
+                sa3html += "</td>";
+                sa3html += "</tr>";
+                sa3html += "</table>";
+
+            
+                sa3Content.innerHTML = sa3html;
+
+		        //Draw it in the DIV
+                document.getElementById('drawCanvas').appendChild(sa3Content);  
+            })
         }
 
 	});
@@ -316,7 +353,7 @@ function update() {
 		});
 }
 
-function buildERP(SAcode, SAlevel, callback) {
+function ERP(SAcode, SAlevel) {
 
     if (SAlevel === 2) {
         var parameter = {
@@ -328,11 +365,10 @@ function buildERP(SAcode, SAlevel, callback) {
             SA3: SAcode,
         }
     }
-
-    return $.getJSON("ABSerp.php", parameter).then(function(data) {
-        callback(data);
+    return $.getJSON("ABSerp.php", parameter, function(data){
+            $.value = data;
     });
-                             
+    
 }
 
 
