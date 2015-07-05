@@ -91,9 +91,11 @@ function addMarker(place) {
 
 function getData(place) {
 
+    var postcode = place.POA_CODE_2011;
+
 	//Send the postcode data to the database
 	var parameter = {
-		postcode: place.POA_CODE_2011,
+		postcode: postcode,
 	}
 
 
@@ -113,70 +115,107 @@ function getData(place) {
 
 
 
-            
+            //clear the canvas
             document.getElementById('drawCanvas').innerHTML="";
+
+            //grab the SA2 information
             $.getJSON("ABSerp.php", {SA2: SA2code}).done(function(data){
-                    
-                var sa2Content = document.createElement('sa2content');
-                var sa2pop;
-	    	    var sa2html = "";
-                
-                sa2Content.className = 'sa2';
-                sa2pop = data.series[0].observations[0].Value;
-
-                console.log(sa2pop);
-	    
-			    sa2html += "<table>";
-                sa2html += "<tr>";
-                sa2html += "<td>";
-                sa2html += "SA2 Population:&nbsp ";
-                sa2html += "</td>";
-           	    sa2html += "<td>";
-                sa2html += parseInt( sa2pop ).toLocaleString();
-                sa2html += "</td>";
-                sa2html += "</tr>";
-                sa2html += "</table>";
-
-                sa2Content.innerHTML = sa2html;
-
-		        document.getElementById('drawCanvas').appendChild(sa2Content);
+                absHTML(data, "sa2Content", "sa2");
             })
-
-
-
-
-            $.getJSON("ABSerp.php", {SA3: SA3code}).done(function(data){
-
-                var sa3pop;
-                var sa3Content = document.createElement('sa3content');
-			    var sa3html = "";
-
-                sa3Content.className = 'sa3';
-                sa3pop = data.series[0].observations[0].Value;
-                console.log(sa3pop);
-
-			    sa3html += "<table>";
-                sa3html += "<tr>";
-                sa3html += "<td>";
-                sa3html += "SA3 Population:&nbsp ";
-                sa3html += "</td>";
-           	    sa3html += "<td>";
-                sa3html += parseInt( sa3pop ).toLocaleString();
-                sa3html += "</td>";
-                sa3html += "</tr>";
-                sa3html += "</table>";
-
             
-                sa3Content.innerHTML = sa3html;
-
-		        //Draw it in the DIV
-                document.getElementById('drawCanvas').appendChild(sa3Content);  
+            //grab the SA3 information
+            $.getJSON("ABSerp.php", {SA3: SA3code}).done(function(data){
+                absHTML(data, "sa3Content", "sa3");
             })
+
+            //grab the LPI information
+            $.getJSON('ABSlabour.php', {STATE: stateCode}).done(function(data){
+                absHTML(data, "lpiContent", "lpi");
+            })
+
+            //grab the Socio Economic Score
+            //first build the two parameters
+            var rwapParam = {
+                measure: "RWAP",
+                postcode: postcode,
+            }
+
+            var scoreParam = {
+                measure: "SCORE",
+                postcode: postcode,
+            }
+
+            //grab the sefia Rank (Australian Percentile)
+            $.getJSON("ABSseifa.php", rwapParam).done(function(data){
+                absHTML(data, "seifaRankContent", "rwap");
+            })
+
+            //grab the sefia score
+            $.getJSON("ABSseifa.php", scoreParam).done(function(data){
+                absHTML(data, "seifaScoreContent", "seifaScore");
+            })
+
+
         }
 
 	});
 
 
+}
+
+function absHTML(data, contentName, nameOfClass) {
+
+    var value;
+    var content = document.createElement(contentName);
+    var html = "";
+    var title;
+
+    content.className = nameOfClass;
+
+
+    //set value if it isn't broken
+
+    try
+    {
+        var parseValue = data.series[0].observations[0].Value;
+        value = parseInt( parseValue ).toLocaleString();
+    }
+    catch (e)
+    {
+        value = "Not Available";
+        console.log(data);
+    }
+    
+
+    //build the html titles for drawCanavas
+    switch (contentName)
+    {
+        case "sa2Content":
+            title = "SA2 Population";
+            break;
+        case "sa3Content":
+            title = "SA3 Population";
+            break;
+        case "lpiContent":
+            title = "Labour Price Index";
+            break;
+        case "seifaRankContent":
+            title = "Australian Socio Economic Percentile";
+            break;
+        case "seifaScoreContent":
+            title = "Australian Socio Economic Score";
+            break;
+    }
+
+    html += "<table><tr><td>";
+    html += title;
+    html += ":&nbsp</td><td>";
+    html +=value;
+    html += "</td></tr></table>";
+
+    content.innerHTML = html;
+
+    document.getElementById('drawCanvas').appendChild(content);
 }
 
 
