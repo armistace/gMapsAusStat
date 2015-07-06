@@ -469,7 +469,6 @@
 				if (isScrollableH) {
 					pane.width((container.outerWidth() - originalPaddingTotalWidth) + 'px');
 				}
-				contentHeight = pane[0].scrollHeight; 
 				percentInViewV = contentHeight / paneHeight;
 
 				if (isScrollableH) {
