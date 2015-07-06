@@ -240,6 +240,7 @@ a:hover{
 /* jScrollPane Customizations */
 
 .jspVerticalBar {
+    position: absolute;
 	right: 4px !important;
 	width: 9px !important;
 
