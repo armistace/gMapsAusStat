@@ -14,8 +14,8 @@ $(function(){
 		$.each(response.statuses, function(){
 		
 			var str = '	<div class="tweet">\
-						<div class="avatar"><a href="http://twitter.com/'+this.user.screen_name+'" target="_blank"><img src="'+this.user.profile_image_url+'" alt="'+this.from_user+'" /></a></div>\
-						<div class="user"><a href="http://twitter.com/'+this.user.screen_name+'" target="_blank">'+this.user.screen_name+'</a></div>\
+						<div class="avatar"><a href="https://twitter.com/'+this.user.screen_name+'" target="_blank"><img src="'+this.user.profile_image_url_https+'" alt="'+this.from_user+'" /></a></div>\
+						<div class="user"><a href="https://twitter.com/'+this.user.screen_name+'" target="_blank">'+this.user.screen_name+'</a></div>\
 						<div class="time">'+relativeTime(this.created_at)+'</div>\
 						<div class="txt">'+formatTwitString(this.text)+'</div>\
 						</div>';
@@ -37,8 +37,8 @@ $(function(){
 	function formatTwitString(str){
 		str=' '+str;
 		str = str.replace(/((ftp|https?):\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/gm,'<a href="$1" target="_blank">$1</a>');
-		str = str.replace(/([^\w])\@([\w\-]+)/gm,'$1@<a href="http://twitter.com/$2" target="_blank">$2</a>');
-		str = str.replace(/([^\w])\#([\w\-]+)/gm,'$1<a href="http://twitter.com/search?q=%23$2" target="_blank">#$2</a>');
+		str = str.replace(/([^\w])\@([\w\-]+)/gm,'$1@<a href="https://twitter.com/$2" target="_blank">$2</a>');
+		str = str.replace(/([^\w])\#([\w\-]+)/gm,'$1<a href="https://twitter.com/search?q=%23$2" target="_blank">#$2</a>');
 		return str;
 	}
 
