@@ -52,7 +52,7 @@ if(!isset($_GET['handles']) || !is_array($_GET['handles'])){
 
 $cache = md5(implode($_POST['handles'])).'.cache';
 
-if(file_exists($cache) && time() - filemtime($cache) < 1*60){
+if(file_exists($cache) && time() - filemtime($cache) < 10){
 	// There is a cache file, and it is fresher than 15 minutes. Use it!
 
 	echo file_get_contents($cache);
