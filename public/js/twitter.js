@@ -1,5 +1,7 @@
 $(function(){
 
+	console.log(globCoords);
+	console.log(globPlace);
 	var tweetUsers = ['-24.20', '135.35', '4000km'],
         place = 'Australia',
 		container = $('#tweet-container');

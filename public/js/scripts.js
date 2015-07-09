@@ -92,11 +92,13 @@ function addMarker(place) {
 function getData(place) {
 
     var postcode = place.POA_CODE_2011;
+    
+    globPlace = place.Suburb;
 
 	//Send the postcode data to the database
 	var parameter = {
 		postcode: postcode,
-	}
+	};
 
 
 	//go to Geo to get the SA information
@@ -121,39 +123,39 @@ function getData(place) {
             //grab the SA2 information
             $.getJSON("ABSerp.php", {SA2: SA2code}).done(function(data){
                 absHTML(data, "sa2Content", "sa2");
-            })
+            });
             
             //grab the SA3 information
             $.getJSON("ABSerp.php", {SA3: SA3code}).done(function(data){
                 absHTML(data, "sa3Content", "sa3");
-            })
+            });
 
             //grab the LPI information
             $.getJSON('ABSlabour.php', {STATE: stateCode}).done(function(data){
                 absHTML(data, "lpiContent", "lpi");
-            })
+            });
 
             //grab the Socio Economic Score
             //first build the two parameters
             var rwapParam = {
                 measure: "RWAP",
                 postcode: postcode,
-            }
+            };
 
             var scoreParam = {
                 measure: "SCORE",
                 postcode: postcode,
-            }
+            };
 
             //grab the sefia Rank (Australian Percentile)
             $.getJSON("ABSseifa.php", rwapParam).done(function(data){
                 absHTML(data, "seifaRankContent", "rwap");
-            })
+            });
 
             //grab the sefia score
             $.getJSON("ABSseifa.php", scoreParam).done(function(data){
                 absHTML(data, "seifaScoreContent", "seifaScore");
-            })
+            });
 
 
         }
@@ -259,6 +261,9 @@ function configure() {
 		// ensure coordinates are numbers
 		var latitude = (_.isNumber(suggestion.latitude)) ? suggestion.latitude : parseFloat(suggestion.latitude);
 		var longitude = (_.isNumber(suggestion.longitude)) ? suggestion.longitude : parseFloat(suggestion.longitude);
+		
+		//set glob coords to feed other scripts
+		globCoords = [latitude, longitude, "100km"];
 
 		// set map's center
 		map.setCenter({
@@ -390,25 +395,71 @@ function update() {
 			// log error to browser's console
 			console.log(errorThrown.toString());
 		});
+		
+	var tweetUsers = globCoords,
+        place = globPlace,
+		container = $('#tweet-container');
+
+	$('#twitter-ticker').slideDown('slow');
+		
+	$.getJSON('twitter.php', {handles:tweetUsers, places:place}, function(response){
+
+		// Empty the container
+		container.html('');
+		
+		$.each(response.statuses, function(){
+		
+			var str = '	<div class="tweet">\
+						<div class="avatar"><a href="https://twitter.com/'+this.user.screen_name+'" target="_blank"><img src="'+this.user.profile_image_url_https+'" alt="'+this.from_user+'" /></a></div>\
+						<div class="user"><a href="https://twitter.com/'+this.user.screen_name+'" target="_blank">'+this.user.screen_name+'</a></div>\
+						<div class="time">'+relativeTime(this.created_at)+'</div>\
+						<div class="txt">'+formatTwitString(this.text)+'</div>\
+						</div>';
+			
+			container.append(str);
+		
+		});
+		
+		// Initialize the jScrollPane plugin
+		container.jScrollPane({
+			mouseWheelSpeed:25
+		});
+
+	});
 }
 
-function ERP(SAcode, SAlevel) {
+//Twitter Helper functions
 
-    if (SAlevel === 2) {
-        var parameter = {
-            SA2: SAcode,
-        }
-    }
-    else {
-        var parameter = {
-            SA3: SAcode,
-        }
-    }
-    return $.getJSON("ABSerp.php", parameter, function(data){
-            $.value = data;
-    });
-    
+function formatTwitString(str){
+	str=' '+str;
+	str = str.replace(/((ftp|https?):\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/gm,'<a href="$1" target="_blank">$1</a>');
+	str = str.replace(/([^\w])\@([\w\-]+)/gm,'$1@<a href="https://twitter.com/$2" target="_blank">$2</a>');
+	str = str.replace(/([^\w])\#([\w\-]+)/gm,'$1<a href="https://twitter.com/search?q=%23$2" target="_blank">#$2</a>');
+	return str;
 }
+
+function relativeTime(pastTime){
+	var origStamp = Date.parse(pastTime);
+	var curDate = new Date();
+	var currentStamp = curDate.getTime();
+	
+	var difference = parseInt((currentStamp - origStamp)/1000);
+
+	if(difference < 0) return false;
+
+	if(difference <= 5)				return "Just now";
+	if(difference <= 20)			return "Seconds ago";
+	if(difference <= 60)			return "A minute ago";
+	if(difference < 3600)			return parseInt(difference/60)+" minutes ago";
+	if(difference <= 1.5*3600) 		return "One hour ago";
+	if(difference < 23.5*3600)		return Math.round(difference/3600)+" hours ago";
+	if(difference < 1.5*24*3600)	return "One day ago";
+	
+	var dateArr = pastTime.split(' ');
+	return dateArr[4].replace(/\:\d+$/,'')+' '+dateArr[2]+' '+dateArr[1]+(dateArr[3]!=curDate.getFullYear()?' '+dateArr[3]:'');
+}	
+
+
 
 
 
