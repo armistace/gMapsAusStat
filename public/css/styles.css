@@ -271,14 +271,14 @@ a:hover{
 
 #weather {
   position: absolute;
-  top: 300px;
+  top: 400px;
   left: 20px;
   width: 500px;
   margin: 0px auto;
   text-align: center;
   text-transform: uppercase;
 }
-
+/*
 i {
   color: #fff;
   font-family: weather;
@@ -287,7 +287,7 @@ i {
   font-style: normal;
   line-height: 1.0;
 }
-
+*/
 .icon-0:before { content: ":"; }
 .icon-1:before { content: "p"; }
 .icon-2:before { content: "S"; }

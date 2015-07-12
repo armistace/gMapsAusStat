@@ -7,6 +7,10 @@
  * Global JavaScript.
  */
 
+var globCoords = ["-24.20", "134.35", "4000km"];
+var globPlace = "Australia";
+var globState = "";
+
 // Google Map
 var map;
 
@@ -92,8 +96,9 @@ function addMarker(place) {
 function getData(place) {
 
     var postcode = place.POA_CODE_2011;
-    
+    console.log(place); 
     globPlace = place.Suburb;
+    globState = place.State;
 
 	//Send the postcode data to the database
 	var parameter = {
@@ -426,6 +431,8 @@ function update() {
 		});
 
 	});
+
+    updateWeather();
 }
 
 //Twitter Helper functions
@@ -460,24 +467,28 @@ function relativeTime(pastTime){
 }	
 
 // Docs at http://simpleweatherjs.com
-$(document).ready(function() {
-  $.simpleWeather({
-    location: 'Austin, TX',
-    woeid: '',
-    unit: 'f',
-    success: function(weather) {
-      html = '<h2><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
-      html += '<ul><li>'+weather.city+', '+weather.region+'</li>';
-      html += '<li class="currently">'+weather.currently+'</li>';
-      html += '<li>'+weather.wind.direction+' '+weather.wind.speed+' '+weather.units.speed+'</li></ul>';
+function updateWeather(){
+    console.log(globPlace);
+    console.log(globState);
+    $(document).ready(function() {
+        $.simpleWeather({
+            location: globPlace + ', ' + globState,
+            woeid: '',
+            unit: 'c',
+        success: function(weather) {
+            html = '<h2><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
+            html += '<ul><li>'+weather.city+', '+weather.region+'</li>';
+            html += '<li class="currently">'+weather.currently+'</li>';
+            html += '<li>'+weather.wind.direction+' '+weather.wind.speed+' '+weather.units.speed+'</li></ul>';
   
-      $("#weather").html(html);
-    },
-    error: function(error) {
-      $("#weather").html('<p>'+error+'</p>');
-    }
-  });
-});
+            $("#weather").html(html);
+        },
+        error: function(error) {
+            $("#weather").html('<p>'+error+'</p>');
+            }
+        });
+    });
+}
 
 
 
