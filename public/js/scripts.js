@@ -281,6 +281,7 @@ function configure() {
 		// update UI
 		update();
 		getData(suggestion);
+        updateWeather();
 	});
 
 	// hide info window when text box has focus
@@ -432,7 +433,6 @@ function update() {
 
 	});
 
-    updateWeather();
 }
 
 //Twitter Helper functions
