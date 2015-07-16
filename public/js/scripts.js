@@ -99,6 +99,7 @@ function getData(place) {
     console.log(place); 
     globPlace = place.Suburb;
     globState = place.State;
+	getNews(place);
 
 	//Send the postcode data to the database
 	var parameter = {
@@ -223,6 +224,33 @@ function absHTML(data, contentName, nameOfClass) {
     content.innerHTML = html;
 
     document.getElementById('drawCanvas').appendChild(content);
+}
+
+function getNews(place){
+    var html = "";
+	var contentString = "<div id='info'>";
+	//query articles and create the label
+	$.getJSON("articles.php", {geo: place.Suburb}).always(function(data, textStatus, jqXHR) {
+
+
+		for (var i = 0; i < 10; i++) {
+			//this builds the links to the different articles, it took a long time to work out
+
+			if (typeof(data[i]) === "undefined") {
+				// http://www.ajaxload.info/
+				contentString = contentString.concat("<img alt='loading' src='img/ajax-loader.gif'/>");
+				break;
+			} else {
+				contentString = contentString.concat("<a href=" + data[i].link + ">" + data[i].title + "</a><br>");
+			}
+
+			// end div
+			//contentString = contentString.concat("<a href=" + data[i].link + ">" + data[i].title + "</a><br>");
+		}
+		contentString += "</div>";
+		html += contentString;
+	}
+	document.getElementById('news').innerHTML = html;
 }
 
 
