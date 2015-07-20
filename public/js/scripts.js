@@ -124,7 +124,7 @@ function getData(place) {
 
 
             //clear the canvas
-            document.getElementById('drawCanvas').innerHTML="";
+            document.getElementById('stats').innerHTML="";
 
             //grab the SA2 information
             $.getJSON("ABSerp.php", {SA2: SA2code}).done(function(data){
@@ -222,14 +222,13 @@ function absHTML(data, contentName, nameOfClass) {
     html += "</td></tr></table>";
 
     content.innerHTML = html;
+    
 
-    document.getElementById('drawCanvas').appendChild(content);
+    document.getElementById('stats').appendChild(content);
 }
 
 function getNews(place){
 
-    var content = document.createElement("news");
-    content.className = "newsInfo";
     var html = "";
 	var contentString = "";
 	//query articles and create the label
@@ -252,10 +251,8 @@ function getNews(place){
 		}
 		contentString += "";
 		html += contentString;
-        content.innerHTML = html;
+        document.getElementById('newsContent').innerHTML = html;
 	})
-    console.log(html);
-	document.getElementById('news').appendChild(content);
 }
 
 
@@ -439,9 +436,11 @@ function update() {
         place = globPlace,
 		container = $('#tweet-container');
 
+
 	$('#twitter-ticker').slideDown('slow');
 		
 	$.getJSON('twitter.php', {handles:tweetUsers, places:place}, function(response){
+       
 
 		// Empty the container
 		container.html('');
@@ -456,16 +455,23 @@ function update() {
 						</div>';
 			
 			container.append(str);
+            
 		
 		});
 		
 		// Initialize the jScrollPane plugin
-		container.jScrollPane({
+        container.jScrollPane({
 			mouseWheelSpeed:25
 		});
 
 	});
 
+}
+
+function refreshTwit() {
+    var pane = $('#twitter-ticker');
+    var api = pane.data('jsp');
+    api.reinitialise();
 }
 
 //Twitter Helper functions

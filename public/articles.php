@@ -12,7 +12,12 @@
 
     // escape user's input
     $geo = urlencode($_GET["geo"]);
+    if ($geo == "Darwin" || "Katherine")
+    {
+        $geo = "Northern%20Territory";
+    }
 
+    
     // numerically indexed array of articles
     $articles = [];
     

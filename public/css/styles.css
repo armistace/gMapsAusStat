@@ -126,6 +126,9 @@ body,
     border: 1px solid #ccc;         
     padding: 20px; 
 }
+#drawCanvas h2 {
+    margin-top: 0px;
+}
 
 #news {
     position: absolute;
@@ -138,6 +141,11 @@ body,
     border: 1px solid #ccc;         
     padding: 20px;
 }
+
+#news h2 {
+    margin-top: 0px;
+}
+
 
 h2.tut{
 	position:absolute;
@@ -282,9 +290,9 @@ a:hover{
 
 #weather {
   position: absolute;
-  top: 400px;
+  bottom: 20px;
   left: 20px;
-  width: 500px;
+  width: 680px;
   margin: 0px auto;
   text-align: center;
   text-transform: uppercase;

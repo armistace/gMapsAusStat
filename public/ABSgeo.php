@@ -12,6 +12,10 @@
         {
             $postcode = 2000;
         }
+        if ($postcode = 801 || $postcode = 800)
+        {
+            $postcode = 820;
+        }
         
         //PDO is used so this is ok
         $sql = "SELECT DISTINCT SA3_CODE_2011, SA3_NAME_2011, SA2_MAINCODE_2011, SA2_NAME_2011, STATE_CODE_2011, STATE_NAME_2011 FROM SA1_Postcode WHERE POA_CODE_2011 = $postcode"; 
