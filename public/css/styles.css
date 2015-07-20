@@ -127,6 +127,17 @@ body,
     padding: 20px; 
 }
 
+#news {
+    position: absolute;
+    bottom: 15px;
+    right: 300px;
+    background-color: #ffffff;
+    width: 400px;
+    margin: 0;
+    border-radius: 15px;
+    border: 1px solid #ccc;         
+    padding: 20px;
+}
 
 h2.tut{
 	position:absolute;

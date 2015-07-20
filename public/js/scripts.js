@@ -227,13 +227,16 @@ function absHTML(data, contentName, nameOfClass) {
 }
 
 function getNews(place){
+
+    var content = document.createElement("news");
+    content.className = "newsInfo";
     var html = "";
-	var contentString = "<div id='info'>";
+	var contentString = "";
 	//query articles and create the label
 	$.getJSON("articles.php", {geo: place.Suburb}).always(function(data, textStatus, jqXHR) {
 
 
-		for (var i = 0; i < 10; i++) {
+		for (var i = 0; i < 5; i++) {
 			//this builds the links to the different articles, it took a long time to work out
 
 			if (typeof(data[i]) === "undefined") {
@@ -247,10 +250,12 @@ function getNews(place){
 			// end div
 			//contentString = contentString.concat("<a href=" + data[i].link + ">" + data[i].title + "</a><br>");
 		}
-		contentString += "</div>";
+		contentString += "";
 		html += contentString;
-	}
-	document.getElementById('news').innerHTML = html;
+        content.innerHTML = html;
+	})
+    console.log(html);
+	document.getElementById('news').appendChild(content);
 }
 
 
