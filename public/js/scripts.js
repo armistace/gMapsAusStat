@@ -96,7 +96,6 @@ function addMarker(place) {
 function getData(place) {
 
     var postcode = place.POA_CODE_2011;
-    console.log(place); 
     globPlace = place.Suburb;
     globState = place.State;
 	getNews(place);
@@ -310,8 +309,10 @@ function configure() {
 
 		// update UI
 		update();
+        refreshTwit();
 		getData(suggestion);
         updateWeather();
+
 	});
 
 	// hide info window when text box has focus
@@ -421,7 +422,7 @@ function update() {
 			removeMarkers();
 
 			// add new markers to map
-			for (var i = 0; i < 10; i++) {
+			for (var i = 0; i < 1; i++) {
 				addMarker(data[i]);
 			}
 
@@ -445,7 +446,7 @@ function update() {
 		// Empty the container
 		container.html('');
 		
-		$.each(response.statuses, function(){
+        $.each(response.statuses, function(){
 		
 			var str = '	<div class="tweet">\
 						<div class="avatar"><a href="https://twitter.com/'+this.user.screen_name+'" target="_blank"><img src="'+this.user.profile_image_url_https+'" alt="'+this.from_user+'" /></a></div>\
@@ -456,20 +457,30 @@ function update() {
 			
 			container.append(str);
             
-		
 		});
 		
-		// Initialize the jScrollPane plugin
+        // Initialize the jScrollPane plugin
         container.jScrollPane({
-			mouseWheelSpeed:25
+			mouseWheelSpeed: 25,
 		});
 
+        if(globPlace !== "Australia")
+        {
+            $('#tweet-containter').jScrollPane({
+                mouseWheelSpeed: 25,
+                autoReinitialise: true,
+            });
+            console.log(container.data('jsp'));
+            var api = $('#tweet-container').data('jsp');
+            api.reinitialise();
+        }  
+		
 	});
 
 }
 
 function refreshTwit() {
-    var pane = $('#twitter-ticker');
+    var pane = $('#tweet-container');
     var api = pane.data('jsp');
     api.reinitialise();
 }
@@ -507,8 +518,6 @@ function relativeTime(pastTime){
 
 // Docs at http://simpleweatherjs.com
 function updateWeather(){
-    console.log(globPlace);
-    console.log(globState);
     $(document).ready(function() {
         $.simpleWeather({
             location: globPlace + ', ' + globState,
