@@ -7,7 +7,7 @@
  * Global JavaScript.
  */
 
-var globCoords = ["-24.20", "134.35", "4000km"];
+var globCoords = ["-24.20", "134.35", "1000km"];
 var globPlace = "Australia";
 var globState = "";
 
@@ -71,7 +71,13 @@ $(function() {
 
 	// configure UI once Google Map is idle (i.e., loaded)
 	google.maps.event.addListenerOnce(map, "idle", configure);
-
+    createMarquee({
+            duration: 80000,
+            padding: 10,
+            marquee_class: ".twitter-feed",
+            container_class: ".twitter-container",
+            hover: true
+     });
 });
 
 /**
@@ -431,8 +437,30 @@ function update() {
 			// log error to browser's console
 			console.log(errorThrown.toString());
 		});
+
+    var tweetUsers = globCoords,
+        place = globPlace,
+        container = $("#tweets");
+
+
+
+	$.getJSON('twitter.php', {handles:tweetUsers, places:place}, function(response){
+
+		// Empty the container
+		container.html('');
 		
-						
+        $.each(response.statuses, function(){
+		
+		var str ="<li>"+this.user.screen_name+": "+this.text+"</li>";
+			
+		container.append(str);
+        console.log(str);
+        });
+        
+        
+    }); 
+    
+           
 }
 
 
@@ -458,26 +486,12 @@ function updateWeather(){
     });
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function formatTwitString(str){
+        str=' '+str;
+        str = str.replace(/((ftp|https?):\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/gm,'<a href="$1" target="_blank">$1</a>');
+        str = str.replace(/([^\w])\@([\w\-]+)/gm,'$1@<a href="http://twitter.com/$2" target="_blank">$2</a>');
+        str = str.replace(/([^\w])\#([\w\-]+)/gm,'$1<a href="http://twitter.com/search?q=%23$2" target="_blank">#$2</a>');
+        return str;
+    }
 
 

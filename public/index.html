@@ -43,7 +43,13 @@ A mashup of Google Maps and Google News.
         <!--jscrollpan -->
         <script type="text/javascript" src="js/jScrollPane/jquery.mousewheel.js"></script>
         <script type="text/javascript" src="js/jScrollPane/jScrollPane.js"></script>
+
+		<!--Weather -->
         <script type="text/javascript" src="js/jquery.simpleWeather.min.js"></script>
+
+		<!-- Twitter Marquee -->
+		<script type="text/javascript" src="js/marquee.js"></script>
+		<link href="css/marquee.css" rel="stylesheet"/>
 
 
         <!-- app's own JavaScript -->
@@ -51,7 +57,6 @@ A mashup of Google Maps and Google News.
 
         <!-- <script src="js/twitter.js"></script> -->
         <script src="js/scripts.js"></script>
-
 
         <title>Australian Stats</title>
 
@@ -84,6 +89,17 @@ A mashup of Google Maps and Google News.
                     <p>Please type a location</p>
                 </div>
             </div>
-			<div id="weather"></div>
+		<div id="weather"></div>
+		<div class="twitter-content">
+            <div class="twitter-container">
+                <div class="marquee-sibling">
+                    Twitter Feed
+                </div>
+                <div class="twitter-feed">
+                    <ul class="marquee-content-items" id="tweets">
+                        
+                    </ul>
+                </div>
+            </div>
     </body>
 </html>
