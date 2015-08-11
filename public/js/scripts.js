@@ -7,6 +7,8 @@
  * Global JavaScript.
  */
 
+//This sets the the coords and twitter variables for the initial
+//landing page, they get changed in through the update() process
 var globCoords = ["-24.20", "134.35", "1000km"];
 var globPlace = "Australia";
 var globState = "";
@@ -71,6 +73,9 @@ $(function() {
 
 	// configure UI once Google Map is idle (i.e., loaded)
 	google.maps.event.addListenerOnce(map, "idle", configure);
+
+    //This sets the twitter ticker at the bottom and makes it scroll
+    //for more view /public/js/marquee.js
     createMarquee({
             duration: 80000,
             padding: 10,
@@ -101,6 +106,7 @@ function addMarker(place) {
 
 function getData(place) {
 
+    //This sets the required info for the ABS variables
     var postcode = place.POA_CODE_2011;
     globPlace = place.Suburb;
     globState = place.State;
@@ -125,8 +131,6 @@ function getData(place) {
             var SA3Name = data[i].SA3_NAME_2011;
             var stateCode = data[i].STATE_CODE_2011;
             var state = data[i].STATE_NAME_2011;
-
-
 
             //clear the canvas
             document.getElementById('stats').innerHTML="";
@@ -168,16 +172,19 @@ function getData(place) {
                 absHTML(data, "seifaScoreContent", "seifaScore");
             });
 
-
+            //This is the place to add other ABS content
         }
 
 	});
-
-
 }
 
+
+/*
+ * This function concers the ABS data into html
+ */
 function absHTML(data, contentName, nameOfClass) {
 
+    //prepare the content to be added to the canvas
     var value;
     var content = document.createElement(contentName);
     var html = "";
@@ -185,11 +192,11 @@ function absHTML(data, contentName, nameOfClass) {
 
     content.className = nameOfClass;
 
-
     //set value if it isn't broken
 
     try
     {
+        //this needs to be checked hence the try catch
         var parseValue = data.series[0].observations[0].Value;
         value = parseInt( parseValue ).toLocaleString();
     }
@@ -232,6 +239,9 @@ function absHTML(data, contentName, nameOfClass) {
     document.getElementById('stats').appendChild(content);
 }
 
+/*
+ * gets the news information from google
+ */
 function getNews(place){
 
     var html = "";
@@ -241,7 +251,7 @@ function getNews(place){
 
 
 		for (var i = 0; i < 5; i++) {
-			//this builds the links to the different articles, it took a long time to work out
+			//this builds the links to the different articles
 
 			if (typeof(data[i]) === "undefined") {
 				// http://www.ajaxload.info/
@@ -254,6 +264,8 @@ function getNews(place){
 			// end div
 			//contentString = contentString.concat("<a href=" + data[i].link + ">" + data[i].title + "</a><br>");
 		}
+
+        //this adds the new content to the news div
 		contentString += "";
 		html += contentString;
         document.getElementById('newsContent').innerHTML = html;
@@ -381,33 +393,7 @@ function search(query, cb) {
 }
 
 /**
- * Shows info window at marker with content.
- */
-//This is fucking useless if you use the "MarkerWithLabel" library
-function showInfo(marker, content) {
-	// start div
-	var div = "<div id='info'>";
-	if (typeof(content) === "undefined") {
-		// http://www.ajaxload.info/
-		div += "<img alt='loading' src='img/ajax-loader.gif'/>";
-	} else {
-		div += content;
-	}
-
-	// end div
-	div += "</div>";
-
-	// set info window's content
-	info.setContent(div);
-
-	// open info window (if not already open)
-	google.maps.event.addListener(marker, 'click', function() {
-		info.open(map, marker);
-	});
-}
-
-/**
- * Updates UI's markers.
+ * Updates UI
  */
 function update() {
 	// get map's bounds
@@ -420,6 +406,8 @@ function update() {
 		q: $("#q").val(),
 		sw: sw.lat() + "," + sw.lng()
 	};
+
+    //queries update.php to get the info from AusPlaces
 	$.getJSON("update.php", parameters)
 		.done(function(data, textStatus, jqXHR) {
 
@@ -438,23 +426,25 @@ function update() {
 			console.log(errorThrown.toString());
 		});
 
+    //this grabs some global variables and gets them ready to be fed to twitter.php
+    //it also set container to be the tweets div which updated using jQuery
     var tweetUsers = globCoords,
         place = globPlace,
         container = $("#tweets");
 
 
-
+    //grab the info from the twitter api using twitter.php
 	$.getJSON('twitter.php', {handles:tweetUsers, places:place}, function(response){
 
-		// Empty the container
+		// Empty the tweet container
 		container.html('');
 		
+        //build the <li> tags based on the data grabbed from the twitter api
         $.each(response.statuses, function(){
 		
 		var str ="<li>"+this.user.screen_name+": "+this.text+"</li>";
 			
 		container.append(str);
-        console.log(str);
         });
         
         
@@ -463,7 +453,10 @@ function update() {
            
 }
 
-
+/*
+ * This js comes straight from simplweatherjs.com
+ * Big thanks to the author!
+ */
 // Docs at http://simpleweatherjs.com
 function updateWeather(){
     $(document).ready(function() {
@@ -486,6 +479,10 @@ function updateWeather(){
     });
 }
 
+/*
+ * This js comes from http://tutorialzine.com/2009/10/jquery-twitter-ticker/
+ * big thanks to Martin Angelov!
+ */
 function formatTwitString(str){
         str=' '+str;
         str = str.replace(/((ftp|https?):\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?)/gm,'<a href="$1" target="_blank">$1</a>');

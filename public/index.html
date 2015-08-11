@@ -48,9 +48,6 @@ A mashup of Google Maps and Google News.
 
 
         <!-- app's own JavaScript -->
-        <!-- We need to set some variables to be shared by scripts -->
-
-        <!-- <script src="js/twitter.js"></script> -->
         <script src="js/scripts.js"></script>
 
         <title>Australian Stats</title>
@@ -65,35 +62,43 @@ A mashup of Google Maps and Google News.
             <div id="map-canvas"></div>
 
             <!-- http://getbootstrap.com/css/#forms -->
+            <!-- this is the dropdown whilst typing an Australian suburb -->
             <form class="form-inline" id="form" role="form">
                 <div class="form-group">
                     <label class="sr-only" for="q">City, State, Postal Code</label>
                     <input class="form-control" id="q" placeholder="City, State, Postal Code" type="text"/>
+                    <!-- disclaimer -->
                     <p class="disclaim">Please note there can be some level of inaccuracy in converting statistical codes to postcodes.<br> Use these figures with caution</p>
                 </div>
             </form>
+            
+            <!-- this is the div for the stats from ABS -->
             <div id="drawCanvas">
                 <h2>Socio Economic Statistics</h2>
                 <div id="stats">
                     <p>Please type a location</p>
                 </div>
             </div>
+
+            <!-- This is the div for the news -->
             <div id="news">
                 <h2>Local News</h2>
                 <div id="newsContent">
                     <p>Please type a location</p>
                 </div>
             </div>
+
+        <!-- This is the weather div -->
 		<div id="weather"></div>
+
+        <!-- this is twitter ticker at the bottom -->
 		<div class="twitter-content">
             <div class="twitter-container">
                 <div class="marquee-sibling">
                     Twitter Feed
                 </div>
                 <div class="twitter-feed">
-                    <ul class="marquee-content-items" id="tweets">
-                        
-                    </ul>
+                    <ul class="marquee-content-items" id="tweets"></ul>
                 </div>
             </div>
     </body>
