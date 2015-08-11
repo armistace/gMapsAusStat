@@ -13,12 +13,12 @@
     define("DATABASE", "AusPlaces");
 
     /// your database's password
-    define("PASSWORD", "Iwrt1dip2012");
+    define("PASSWORD", "");
 
     // your database's server
     define("SERVER", "localhost");
 
     /// your database's username
-    define("USERNAME", "root");
+    define("USERNAME", "");
 
 ?>
