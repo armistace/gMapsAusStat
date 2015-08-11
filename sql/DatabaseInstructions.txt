@@ -1,0 +1,23 @@
+Please use the following instructions to create database required for this website
+
+Install MariaDB/MySQL on webserver (Please use your OS's instructions)
+
+Note: Whilst this should work with MySQL it has only been tested on MariaDB
+
+Sign in as your database administrator
+mysql -u $user -p $password
+
+where $user = a Database user with create database privileges
+and $password = the above mentioned users password
+
+then in the mysql shell run - > CREATE DATABASE 'AusPlaces'
+
+exit the mysql shell and then in the terminal run:
+
+mysql -u $user -p $password AusPlaces < AusPlaces.sql
+
+where $user and $password are the same as above.
+
+Please contact armistace@riseup.net if you have any issues
+
+

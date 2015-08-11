@@ -1,0 +1,9 @@
+rename constants-example.php to constants.php
+
+in constants.php:
+
+- update the define for 'PASSWORD' with your database password
+
+- update the define for 'USERNAME' with your database user
+
+- If necessary update the defin for 'SERVER' with the hostname of your database
